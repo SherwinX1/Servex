@@ -1,0 +1,8 @@
+@import "tailwindcss";
+/* Import the font (if using Fontsource) */
+@import "@fontsource-variable/geist";
+
+@theme {
+  /* Map the font to the 'sans' utility class */
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+}
