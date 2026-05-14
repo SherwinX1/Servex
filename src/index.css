@@ -6,3 +6,7 @@
   /* Map the font to the 'sans' utility class */
   --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
 }
+
+@theme {
+  --color-brand: #007bff; /* Replace with the exact hex from your logo */
+}

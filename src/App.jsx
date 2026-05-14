@@ -1,13 +1,20 @@
 import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import TrustBar from './components/TrustBar';
+import HowItWorks from './components/HowItWorks';
+import Footer from './components/Footer';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white text-neutral-900">
       <Navbar />
-      <main className="pt-24 px-4">
-        {/* Page content here */}
-        <h1 className="text-4xl font-bold">Welcome to Servex</h1>
+      <main>
+        <Hero />
+        <TrustBar />
+        <HowItWorks />
+        {/* Add more sections here */}
       </main>
+      <Footer />
     </div>
   );
 }
