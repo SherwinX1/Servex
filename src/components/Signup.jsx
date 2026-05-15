@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { signUpUser } from "../lib/supabase"; // adjust path if needed
 
 const SignupModal = ({ isOpen, onClose }) => {
   const [form, setForm] = useState({
@@ -8,14 +9,40 @@ const SignupModal = ({ isOpen, onClose }) => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    // integrate Supabase / Firebase here later
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await signUpUser(
+      form.email,
+      form.password,
+      form.name
+    );
+
+    setLoading(false);
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    console.log("Signed up user:", data.user);
+
+    // OPTIONAL:
+    // close modal after success
+    onClose();
+
+    // OPTIONAL:
+    // clear form
+    setForm({ name: "", email: "", password: "" });
   };
 
   return (
@@ -55,6 +82,13 @@ const SignupModal = ({ isOpen, onClose }) => {
                 </button>
               </div>
 
+              {/* Error */}
+              {error && (
+                <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 px-3 py-2 rounded-lg">
+                  {error}
+                </div>
+              )}
+
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
@@ -64,6 +98,7 @@ const SignupModal = ({ isOpen, onClose }) => {
                   value={form.name}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 />
 
                 <input
@@ -73,6 +108,7 @@ const SignupModal = ({ isOpen, onClose }) => {
                   value={form.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 />
 
                 <input
@@ -82,13 +118,15 @@ const SignupModal = ({ isOpen, onClose }) => {
                   value={form.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
                 />
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
+                  disabled={loading}
+                  className="w-full bg-blue-600 text-white py-3 rounded-xl font-medium hover:bg-blue-700 transition-all shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-60"
                 >
-                  Sign Up
+                  {loading ? "Creating Account..." : "Sign Up"}
                 </button>
               </form>
 
